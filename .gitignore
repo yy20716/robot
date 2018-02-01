@@ -8,7 +8,7 @@ Gemfile*
 bin/original-robot.jar
 bin/owltools2.jar
 bin/robot.jar
-docs/_site/
+docs/_site
 examples/catalog-v001.xml
 examples/out.owl
 examples/results/

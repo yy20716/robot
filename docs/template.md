@@ -1,10 +1,17 @@
-# ROBOT Template
+# Template
 
-ROBOT can convert tables to OWL format using templates. The approach extends the QTT method described in [Overcoming the ontology enrichment bottleneck with Quick Term Templates](http://dx.doi.org/10.3233/AO-2011-0086). ROBOT can read comma-separated values (`.csv` files) or tab-separated values (`.tsv` or `.tab` files) with the following format:
+ROBOT can convert tables to OWL format using templates. See <a href="/examples/template/template.csv" target="_blank">`template.csv`</a> for an example input. Continue reading for details on constructing templates.
 
-1. Headers: ROBOT expects the first row to contain column names for every column used in the data. These are used to make error messages more helpful.
-2. Templates: ROBOT expects the second row to contain template strings for each column that will be used in the OWL conversion. See below for details on template strings.
-3. Data: ROBOT expects each of the remaining rows to correspond to an OWLClass or OWLIndividual. (In the future we may add support for other sorts of OWL entities). Rows with a blank "ID" column will be skipped.
+    robot template --template template.csv \
+      --prefix "ex: http://example.com/" \
+      --ontology-iri "https://github.com/ontodev/robot/examples/template.owl" \
+      --output results/template.owl
+
+The approach extends the QTT method described in <a href="http://dx.doi.org/10.3233/AO-2011-0086" target="_blank">Overcoming the ontology enrichment bottleneck with Quick Term Templates</a>. ROBOT can read comma-separated values (`.csv` files) or tab-separated values (`.tsv` or `.tab` files) with the following format:
+
+1. **Headers**: ROBOT expects the first row to contain column names for every column used in the data. These are used to make error messages more helpful.
+2. **Templates**: ROBOT expects the second row to contain template strings for each column that will be used in the OWL conversion. See below for details on template strings.
+3. **Data**: ROBOT expects each of the remaining rows to correspond to an OWLClass or OWLIndividual. (In the future we may add support for other sorts of OWL entities). Rows with a blank "ID" column will be skipped.
 
 The `template` command accepts an optional input ontology, either using the `--input` option or from the previous command in a chain. If an input ontology is given, its RDFS labels will be used when parsing the template. The `--template` or `-t` option specified the CSV or TSV template file. Multiple templates are allowed, and the order of templates is significant. You can also specify the normal `--prefix` options, the `--output-iri` and `--version-iri`, and the usual `--output` options. See below for the three different merge options, and details on how they control the output of the command.
 
@@ -22,7 +29,7 @@ The `template` command accepts an optional input ontology, either using the `--i
     - `AT` typed annotation: If the template string starts with an `AT` and a space then it will be interpreted as a typed annotation. The `^^` characters must be used to separate the annotation property from the datatype, e.g. `rdfs:comment^^xsd:integer`. The cell value will be the typed literal value of the annotation.
     - `AL` language annotation: If the template string starts with an `AL` and a space then it will be interpreted as a language annotation. The `@` character must be used to separate the annotation property from the language code, e.g. `rdfs:comment@en`.
     - `AI` annotation IRI: If the template string starts with an `AI` and a space, then the annotation will be made as with a string annotation, except that the cell value will be interpreted as an IRI.
-- `C` **class expression**: If the template string starts with a `C` and a space then it will be interpreted as a class expression. The value of the current cell will be substituted into the template, replacing all occurrences of the percent `%` character. Then the result will be parsed into an OWL class expression. ROBOT uses the same syntax for class expressions as Protégé: [Manchester Syntax](http://www.w3.org/2007/OWL/wiki/ManchesterSyntax). If it does not recognize a name, ROBOT will assume that you're trying to refer to a class by its IRI (or compact IRI). This can lead to unexpected behaviour, but it allows you to refer to classes (by IRI) without loading them into the input ontology. This is particularly useful when the input ontology would be too large, such as the NCBI Taxonomy.
+- `C` **class expression**: If the template string starts with a `C` and a space then it will be interpreted as a class expression. The value of the current cell will be substituted into the template, replacing all occurrences of the percent `%` character. Then the result will be parsed into an OWL class expression. ROBOT uses the same syntax for class expressions as Protégé: <a href="http://www.w3.org/2007/OWL/wiki/ManchesterSyntax" target="_blank">Manchester Syntax</a>. If it does not recognize a name, ROBOT will assume that you're trying to refer to a class by its IRI (or compact IRI). This can lead to unexpected behaviour, but it allows you to refer to classes (by IRI) without loading them into the input ontology. This is particularly useful when the input ontology would be too large, such as the NCBI Taxonomy.
 - **axiom annotations**: ROBOT can also annotate logical and annotation axioms.
     - `>A` annotation on annotation: Annotates the annotation axiom created from the cell to the left with the cell value. The column to the left must be an `A*` template string.
     - `>C` annotation on class expression: Annotates the class expression axiom created from the cell to the left with the cell value. The column to the left must be a `C` template string.
